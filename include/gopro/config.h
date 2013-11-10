@@ -1,0 +1,6 @@
+#ifndef INCLUDE_GOPRO_CONFIG_H
+#define INCLUDE_GOPRO_CONFIG_H
+
+#define GOPRO_DEFAULT_IPADDR "10.5.5.9"
+
+#endif
