@@ -27,11 +27,11 @@ $(LIBTARGET): $(OBJS)
 $(BINDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-test: build
+test: $(LIBTARGET)
 	# compile and run tests
+
+examples: $(LIBTARGET)
+	# compile examples
 
 clean:
 	$(RM) $(OBJS) $(LIBTARGET)
-
-examples: examples/gopro.c $(LIBTARGET)
-	# $(CC) $< -o $(BINDIR)/gopro -Iinclude -Lbuild -lgopro

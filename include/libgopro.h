@@ -2,7 +2,7 @@
 #define INCLUDE_GOPRO_H
 
 #include "gopro/camera.h"
-#include "gopro/config.h"
+#include "gopro/defaults.h"
 #include "gopro/version.h"
 
 #endif
