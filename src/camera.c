@@ -59,6 +59,8 @@ void gopro_camera_free(gopro_camera *cam) {
   free(cam);
 }
 
+// Request helpers
+
 void gopro_camera_free_url(char *url) {
   free(url);
 }
@@ -97,7 +99,7 @@ char *gopro_camera_build_param_url(gopro_camera *cam, char *action, char par) {
   pstr[0] = par;
   pstr[1] = '\0';
 
-  char *penc = curl_easy_escape(NULL, pstr, 0);
+  char *penc = curl_easy_escape(NULL, pstr, 1);
 
   strcat(url, "&p=");
   strcat(url, penc);
@@ -127,6 +129,8 @@ int gopro_camera_send_param(gopro_camera *cam, char *action, int param) {
 
   return code;
 }
+
+// Capture controls
 
 int gopro_camera_start_capture(gopro_camera *cam) {
   return gopro_camera_send_param(cam, "SH", 1);
