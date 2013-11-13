@@ -1,5 +1,5 @@
-#ifndef INCLUDE_GOPRO_COMMON_H
-#define INCLUDE_GOPRO_COMMON_H
+#ifndef INCLUDE_COMMON_H
+#define INCLUDE_COMMON_H
 
 #include <assert.h>
 #include <errno.h>

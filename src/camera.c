@@ -1,6 +1,7 @@
 #include "common.h"
 #include "util.h"
 
+#include "buffer.h"
 #include "client.h"
 
 #include "gopro/camera.h"
@@ -113,7 +114,7 @@ int gopro_camera_send(gopro_camera *cam, char *action) {
   assert(cam);
 
   char *url = gopro_camera_build_url(cam, action);
-  int code = gopro_client_get((gopro_client *)(cam->client), url);
+  int code = gopro_client_get((gopro_client *)(cam->client), url, NULL);
   gopro_camera_free_url(url);
 
   return code;
@@ -124,10 +125,33 @@ int gopro_camera_send_param(gopro_camera *cam, char *action, int param) {
   assert(cam);
 
   char *url = gopro_camera_build_param_url(cam, action, param);
-  int code = gopro_client_get((gopro_client *)(cam->client), url);
+  int code = gopro_client_get((gopro_client *)(cam->client), url, NULL);
   gopro_camera_free_url(url);
 
   return code;
+}
+
+// Status
+
+void gopro_status_parse(gopro_status *status, char *bytes) {
+  status->photo_count = (bytes[23] << 8) + bytes[24];
+  status->video_count = (bytes[27] << 8) + bytes[28];
+}
+
+int gopro_camera_get_status(gopro_camera *cam, gopro_status *status) {
+  vbuffer *buffer = vbuffer_create(32);
+
+  char *url = gopro_camera_build_url(cam, "se");
+  int err = gopro_client_get((gopro_client *)(cam->client), url, buffer);
+
+  if (err != 0) return err;
+  if (buffer->length < 31) return 1;
+
+  gopro_status_parse(status, buffer->data);
+  gopro_camera_free_url(url);
+  vbuffer_free(buffer);
+
+  return 0;
 }
 
 // Capture controls
@@ -147,6 +171,7 @@ typedef enum gopro_mode {
   GOPRO_MODE_PHOTO     = 1,
   GOPRO_MODE_BURST     = 2,
   GOPRO_MODE_TIMELAPSE = 3,
+  GOPRO_MODE_MENU      = 7
 } gopro_mode;
 
 int gopro_camera_set_mode(gopro_camera *cam, gopro_mode mode) {

@@ -1,4 +1,4 @@
-#ifndef INCLUDE_GOPRO_UTIL_H
-#define INCLUDE_GOPRO_UTIL_H
+#ifndef INCLUDE_UTIL_H
+#define INCLUDE_UTIL_H
 
 #endif

@@ -9,29 +9,38 @@
 
 int main(int argc, char *argv[]) {
   char *pw = "password";
-  int status;
+  int res;
 
+  gopro_status status;
   gopro_camera *cam = gopro_camera_create_default(pw);
 
-  status = gopro_camera_start_capture(cam);
+  res = gopro_camera_get_status(cam, &status);
 
-  if (status == 0) {
-    sleep(4);
-    status = gopro_camera_stop_capture(cam);
+  if (res == 0) {
+    printf("Battery level: %c\n", status.battery_level);
+    printf("Video count: %d\n", status.video_count);
+    printf("Photo count: %d\n", status.photo_count);
   }
 
-  // status = gopro_camera_set_video_mode(cam);
-  // status = gopro_camera_set_photo_mode(cam);
+  // res = gopro_camera_start_capture(cam);
 
-  // status = gopro_camera_set_video_mode(cam);
-  // status = gopro_camera_set_photo_mode(cam);
-  // status = gopro_camera_set_burst_mode(cam);
-  // status = gopro_camera_set_timelapse_mode(cam);
+  // if (res == 0) {
+  //   sleep(4);
+  //   res = gopro_camera_stop_capture(cam);
+  // }
 
-  // status = gopro_camera_delete_all(cam);
-  // status = gopro_camera_delete_last(cam);
+  // res = gopro_camera_set_video_mode(cam);
+  // res = gopro_camera_set_photo_mode(cam);
+
+  // res = gopro_camera_set_video_mode(cam);
+  // res = gopro_camera_set_photo_mode(cam);
+  // res = gopro_camera_set_burst_mode(cam);
+  // res = gopro_camera_set_timelapse_mode(cam);
+
+  // res = gopro_camera_delete_all(cam);
+  // res = gopro_camera_delete_last(cam);
 
   gopro_camera_free(cam);
 
-  return status;
+  return res;
 }
