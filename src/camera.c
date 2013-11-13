@@ -139,3 +139,52 @@ int gopro_camera_start_capture(gopro_camera *cam) {
 int gopro_camera_stop_capture(gopro_camera *cam) {
   return gopro_camera_send_param(cam, "SH", 0);
 }
+
+// Camera modes
+
+typedef enum gopro_mode {
+  GOPRO_MODE_VIDEO     = 0,
+  GOPRO_MODE_PHOTO     = 1,
+  GOPRO_MODE_BURST     = 2,
+  GOPRO_MODE_TIMELAPSE = 3,
+} gopro_mode;
+
+int gopro_camera_set_mode(gopro_camera *cam, gopro_mode mode) {
+  return gopro_camera_send_param(cam, "CM", mode);
+}
+
+int gopro_camera_set_video_mode(gopro_camera *cam) {
+  return gopro_camera_set_mode(cam, GOPRO_MODE_VIDEO);
+}
+
+int gopro_camera_set_photo_mode(gopro_camera *cam) {
+  return gopro_camera_set_mode(cam, GOPRO_MODE_PHOTO);
+}
+
+int gopro_camera_set_burst_mode(gopro_camera *cam) {
+  return gopro_camera_set_mode(cam, GOPRO_MODE_BURST);
+}
+
+int gopro_camera_set_timelapse_mode(gopro_camera *cam) {
+  return gopro_camera_set_mode(cam, GOPRO_MODE_TIMELAPSE);
+}
+
+// Orientation
+
+int gopro_camera_set_head_up(gopro_camera *cam) {
+  return gopro_camera_send_param(cam, "UP", 0);
+}
+
+int gopro_camera_set_head_down(gopro_camera *cam) {
+  return gopro_camera_send_param(cam, "UP", 1);
+}
+
+// Delete
+
+int gopro_camera_delete_last(gopro_camera *cam) {
+  return gopro_camera_send(cam, "DL");
+}
+
+int gopro_camera_delete_all(gopro_camera *cam) {
+  return gopro_camera_send(cam, "DA");
+}

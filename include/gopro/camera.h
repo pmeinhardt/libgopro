@@ -16,4 +16,15 @@ extern void gopro_camera_free(gopro_camera *cam);
 extern int gopro_camera_start_capture(gopro_camera *cam);
 extern int gopro_camera_stop_capture(gopro_camera *cam);
 
+extern int gopro_camera_set_video_mode(gopro_camera *cam);
+extern int gopro_camera_set_photo_mode(gopro_camera *cam);
+extern int gopro_camera_set_burst_mode(gopro_camera *cam);
+extern int gopro_camera_set_timelapse_mode(gopro_camera *cam);
+
+extern int gopro_camera_set_head_up(gopro_camera *cam);
+extern int gopro_camera_set_head_down(gopro_camera *cam);
+
+extern int gopro_camera_delete_last(gopro_camera *cam);
+extern int gopro_camera_delete_all(gopro_camera *cam);
+
 #endif
