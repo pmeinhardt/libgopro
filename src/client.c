@@ -30,22 +30,19 @@ void gopro_client_free(gopro_client *client) {
   free(client);
 }
 
-size_t gopro_client_receive(void *data, size_t size, size_t n, void *dest) {
-  vbuffer *buffer = (vbuffer *)dest;
-  int err = vbuffer_append(buffer, data, size * n);
-  return (err == 0) ? size * n : 0;
-}
-
-int gopro_client_get(gopro_client *client, char *url, vbuffer *buffer) {
+int gopro_client_get(
+  gopro_client *client,
+  char *url,
+  void *context,
+  gopro_client_cb *cb
+) {
   CURL *curl = client->curl;
   CURLcode res;
 
   curl_easy_setopt(curl, CURLOPT_URL, url);
 
-  if (buffer != NULL) {
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, gopro_client_receive);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer);
-  }
+  if (cb      != NULL) curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, cb);
+  if (context != NULL) curl_easy_setopt(curl, CURLOPT_WRITEDATA, context);
 
   res = curl_easy_perform(curl);
   curl_easy_reset(curl);

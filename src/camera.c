@@ -114,7 +114,7 @@ int gopro_camera_send(gopro_camera *cam, char *action) {
   assert(cam);
 
   char *url = gopro_camera_build_url(cam, action);
-  int code = gopro_client_get((gopro_client *)(cam->client), url, NULL);
+  int code = gopro_client_get((gopro_client *)(cam->client), url, NULL, NULL);
   gopro_camera_free_url(url);
 
   return code;
@@ -125,10 +125,16 @@ int gopro_camera_send_param(gopro_camera *cam, char *action, int param) {
   assert(cam);
 
   char *url = gopro_camera_build_param_url(cam, action, param);
-  int code = gopro_client_get((gopro_client *)(cam->client), url, NULL);
+  int code = gopro_client_get((gopro_client *)(cam->client), url, NULL, NULL);
   gopro_camera_free_url(url);
 
   return code;
+}
+
+size_t gopro_camera_receive(char *data, size_t size, size_t n, void *context) {
+  vbuffer *buffer = (vbuffer *)context;
+  int err = vbuffer_append(buffer, data, size * n);
+  return (err == 0) ? size * n : 0;
 }
 
 // Status
@@ -139,10 +145,12 @@ void gopro_status_parse(gopro_status *status, char *bytes) {
 }
 
 int gopro_camera_get_status(gopro_camera *cam, gopro_status *status) {
+  gopro_client_cb *callback = (gopro_client_cb *)gopro_camera_receive;
+  gopro_client *client = (gopro_client *)(cam->client);
   vbuffer *buffer = vbuffer_create(32);
 
   char *url = gopro_camera_build_url(cam, "se");
-  int err = gopro_client_get((gopro_client *)(cam->client), url, buffer);
+  int err = gopro_client_get(client, url, buffer, callback);
 
   if (err != 0) return err;
   if (buffer->length < 31) return 1;

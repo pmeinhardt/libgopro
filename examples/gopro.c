@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
   res = gopro_camera_get_status(cam, &status);
 
   if (res == 0) {
-    printf("Battery level: %c\n", status.battery_level);
     printf("Video count: %d\n", status.video_count);
     printf("Photo count: %d\n", status.photo_count);
   }
