@@ -3,6 +3,8 @@
 
 #include "client.h"
 
+#include "gopro/errors.h"
+
 gopro_client *gopro_client_create() {
   gopro_client *client = (gopro_client *)malloc(sizeof(gopro_client));
 
@@ -49,8 +51,8 @@ int gopro_client_get(
 
   if (res != CURLE_OK) {
     fprintf(stderr, "Client error: %s\n", curl_easy_strerror(res));
-    return 1;
+    return GOPRO_ERROR;
   }
 
-  return 0;
+  return GOPRO_SUCCESS;
 }

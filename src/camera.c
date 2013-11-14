@@ -6,6 +6,7 @@
 
 #include "gopro/camera.h"
 #include "gopro/defaults.h"
+#include "gopro/errors.h"
 
 gopro_camera *gopro_camera_create(char *ipaddr, char *password) {
   gopro_camera *cam = (gopro_camera *)malloc(sizeof(gopro_camera));
@@ -153,13 +154,13 @@ int gopro_camera_get_status(gopro_camera *cam, gopro_status *status) {
   int err = gopro_client_get(client, url, buffer, callback);
 
   if (err != 0) return err;
-  if (buffer->length < 31) return 1;
+  if (buffer->length < 31) return GOPRO_ERROR;
 
   gopro_status_parse(status, buffer->data);
   gopro_camera_free_url(url);
   vbuffer_free(buffer);
 
-  return 0;
+  return GOPRO_SUCCESS;
 }
 
 // Capture controls
