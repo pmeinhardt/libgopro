@@ -30,9 +30,6 @@ int main(int argc, char *argv[]) {
 
   // res = gopro_camera_set_video_mode(cam);
   // res = gopro_camera_set_photo_mode(cam);
-
-  // res = gopro_camera_set_video_mode(cam);
-  // res = gopro_camera_set_photo_mode(cam);
   // res = gopro_camera_set_burst_mode(cam);
   // res = gopro_camera_set_timelapse_mode(cam);
 
