@@ -34,7 +34,7 @@ gopro_camera *gopro_camera_create(char *ipaddr, char *password) {
 
   strcpy(cam->ipaddr, ipaddr);
 
-  cam->password = (char *)malloc(strlen(ipaddr) + 1);
+  cam->password = (char *)malloc(strlen(password) + 1);
 
   if (cam->password == NULL) {
     perror("Error allocating camera password");
