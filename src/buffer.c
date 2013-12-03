@@ -50,6 +50,7 @@ int vbuffer_resize(vbuffer *buffer, size_t new_capacity) {
   if (backup != NULL) {
     copylen = (new_capacity < buffer->length) ? new_capacity : buffer->length;
     memcpy(buffer->data, backup, copylen);
+    buffer->length = copylen;
     free(backup);
   }
 
