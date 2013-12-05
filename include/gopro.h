@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LIBGOPRO_H
-#define INCLUDE_LIBGOPRO_H
+#ifndef INCLUDE_GOPRO_H
+#define INCLUDE_GOPRO_H
 
 #include "gopro/camera.h"
 #include "gopro/defaults.h"
