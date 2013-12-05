@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "libgopro.h"
+#include "gopro.h"
 
 // build the library with `make`, then from the project root run:
 // gcc -Iinclude -lcurl examples/gopro.c build/libgopro.a -o ./gopro
