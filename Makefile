@@ -1,14 +1,19 @@
-LIBNAME = libgopro
+LIBNAME = gopro
 
 INCDIR = include
 SRCDIR = src
 BINDIR = build
+EXADIR = examples
 
-LIBTARGET = $(BINDIR)/$(LIBNAME).a
+LIBTARGET = $(BINDIR)/lib$(LIBNAME).a
 
 HDRS = $(shell find $(SRCDIR) $(INCDIR) -type f -name *.h)
 SRCS = $(shell find $(SRCDIR) -type f -name *.c)
 OBJS = $(patsubst $(SRCDIR)/%,$(BINDIR)/%,$(SRCS:.c=.o))
+
+EXASRCS = $(shell find $(EXADIR) -type f -name *.c)
+EXABINS = $(patsubst $(EXADIR)/%,$(BINDIR)/%,$(EXASRCS:.c=))
+EXADEPS = -lcurl
 
 INCLUDES = -I$(SRCDIR) -I$(INCDIR)
 DEFINES =
@@ -37,8 +42,10 @@ $(BINDIR)/%.o: $(SRCDIR)/%.c $(HDRS)
 test: lib
 	# compile and run tests
 
-examples: lib
-	# compile examples
+examples: lib $(EXABINS)
+
+$(BINDIR)/%: $(EXADIR)/%.c
+	$(CC) $(INCLUDES) $(EXADEPS) -L$(BINDIR) -l$(LIBNAME) -o $@ $^
 
 clean:
-	$(RM) $(OBJS) $(LIBTARGET)
+	$(RM) $(OBJS) $(LIBTARGET) $(EXABINS)
