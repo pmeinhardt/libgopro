@@ -19,6 +19,12 @@ AR = ar rcs
 
 RM = rm -f
 
+TSDIR = test
+TSSRCS = $(shell find $(TSDIR) -path $(TSDIR)/clar -prune -o -type f -name *.c -print)
+TSTARGET = $(BINDIR)/tests
+TSINCLUDES = $(INCLUDES) -I$(TSDIR) -I$(TSDIR)/clar
+TSCFLAGS = $(TSINCLUDES) -L$(BINDIR) -lgopro -lcurl
+
 build: $(LIBTARGET)
 
 $(LIBTARGET): $(OBJS)
@@ -27,11 +33,17 @@ $(LIBTARGET): $(OBJS)
 $(BINDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-test: $(LIBTARGET)
-	# compile and run tests
+clar:
+	test/clar/generate.py test
+
+$(TSTARGET): $(TSSRCS)
+	$(CC) $(TSCFLAGS) -o $@ $^ test/clar/clar.c
+
+test: $(LIBTARGET) $(TSTARGET)
+	@$(TSTARGET)
 
 examples: $(LIBTARGET)
 	# compile examples
 
 clean:
-	$(RM) $(OBJS) $(LIBTARGET)
+	$(RM) $(OBJS) $(LIBTARGET) $(TSTARGET)

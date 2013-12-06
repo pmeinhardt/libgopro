@@ -1,0 +1,46 @@
+extern void test_buffer__initial_state(void);
+extern void test_buffer__resize_grow_empty(void);
+extern void test_buffer__resize_grow_with_data(void);
+extern void test_buffer__resize_shrink(void);
+extern void test_buffer__append(void);
+extern void test_buffer__initialize(void);
+extern void test_buffer__cleanup(void);
+extern void test_client__create(void);
+extern void test_camera__create(void);
+extern void test_camera__initialize(void);
+extern void test_camera__cleanup(void);
+static const struct clar_func _clar_cb_buffer[] = {
+    { "initial_state", &test_buffer__initial_state },
+    { "resize_grow_empty", &test_buffer__resize_grow_empty },
+    { "resize_grow_with_data", &test_buffer__resize_grow_with_data },
+    { "resize_shrink", &test_buffer__resize_shrink },
+    { "append", &test_buffer__append }
+};
+static const struct clar_func _clar_cb_client[] = {
+    { "create", &test_client__create }
+};
+static const struct clar_func _clar_cb_camera[] = {
+    { "create", &test_camera__create }
+};
+static struct clar_suite _clar_suites[] = {
+    {
+        "buffer",
+        { "initialize", &test_buffer__initialize },
+        { "cleanup", &test_buffer__cleanup },
+        _clar_cb_buffer, 5, 1
+    },
+    {
+        "camera",
+        { "initialize", &test_camera__initialize },
+        { "cleanup", &test_camera__cleanup },
+        _clar_cb_camera, 1, 1
+    },
+    {
+        "client",
+        { NULL, NULL },
+        { NULL, NULL },
+        _clar_cb_client, 1, 1
+    }
+};
+static const size_t _clar_suite_count = 3;
+static const size_t _clar_callback_count = 7;
