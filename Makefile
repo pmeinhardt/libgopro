@@ -1,14 +1,16 @@
 LIBNAME = libgopro
 
+INCDIR = include
 SRCDIR = src
 BINDIR = build
 
 LIBTARGET = $(BINDIR)/$(LIBNAME).a
 
+HDRS = $(shell find $(SRCDIR) $(INCDIR) -type f -name *.h)
 SRCS = $(shell find $(SRCDIR) -type f -name *.c)
 OBJS = $(patsubst $(SRCDIR)/%,$(BINDIR)/%,$(SRCS:.c=.o))
 
-INCLUDES = -Isrc -Iinclude
+INCLUDES = -I$(SRCDIR) -I$(INCDIR)
 DEFINES =
 
 CC = gcc
@@ -19,18 +21,23 @@ AR = ar rcs
 
 RM = rm -f
 
-build: $(LIBTARGET)
+
+default: lib
+
+all: lib test examples
+
+lib: $(LIBTARGET)
 
 $(LIBTARGET): $(OBJS)
 	$(AR) $@ $^
 
-$(BINDIR)/%.o: $(SRCDIR)/%.c
+$(BINDIR)/%.o: $(SRCDIR)/%.c $(HDRS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
 
-test: $(LIBTARGET)
+test: lib
 	# compile and run tests
 
-examples: $(LIBTARGET)
+examples: lib
 	# compile examples
 
 clean:
