@@ -1,4 +1,6 @@
-#include "tap.h"
+#include "test-helper.h"
+
+#include "common.h"
 #include "buffer.h"
 
 static vbuffer *buf;
