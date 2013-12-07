@@ -1,3 +1,11 @@
+CC = gcc
+AR = ar rcs
+RM = rm -f
+PROVE = prove -e ''
+
+CFLAGS = -g -O2 -Wall
+LDFLAGS =
+
 LIBNAME = gopro
 
 INCDIR = include
@@ -8,28 +16,30 @@ EXADIR = examples
 
 LIBTARGET = $(BINDIR)/lib$(LIBNAME).a
 
-HDRS = $(shell find $(SRCDIR) $(INCDIR) -type f -name *.h)
-SRCS = $(shell find $(SRCDIR) -type f -name *.c)
-OBJS = $(patsubst $(SRCDIR)/%,$(BINDIR)/%,$(SRCS:.c=.o))
-
-TSTSRCS = $(shell find $(TSTDIR) -type f -name test-*.c)
-TSTBINS = $(patsubst $(TSTDIR)/%,$(BINDIR)/%,$(TSTSRCS:.c=))
-TSTDEPS = $(TSTDIR)/libtap/tap.c
-
-EXASRCS = $(shell find $(EXADIR) -type f -name *.c)
-EXABINS = $(patsubst $(EXADIR)/%,$(BINDIR)/%,$(EXASRCS:.c=))
-EXADEPS = -lcurl
-
-INCLUDES = -I$(SRCDIR) -I$(INCDIR)
+INCLUDES = -I$(INCDIR)
 DEFINES =
 
-CC = gcc
-CFLAGS = -g $(DEFINES) $(INCLUDES) -Wall -Wextra -O2
-LDFLAGS =
+HEADERS = $(shell find $(SRCDIR) $(INCDIR) -type f -name *.h)
+SOURCES = $(shell find $(SRCDIR) -type f -name *.c)
+OBJECTS = $(patsubst $(SRCDIR)/%,$(BINDIR)/%,$(SOURCES:.c=.o))
 
-AR = ar rcs
+LIB_CFLAGS = $(CFLAGS) -Wextra -I$(SRCDIR) $(INCLUDES)
+LIB_LDFLAGS = $(LDFLAGS)
 
-RM = rm -f
+TEST_SOURCES = $(shell find $(TSTDIR) -type f -name test-*.c)
+TEST_DEPS = $(TSTDIR)/libtap/tap.c
+TESTS = $(patsubst $(TSTDIR)/%,$(BINDIR)/%,$(TEST_SOURCES:.c=))
+
+TEST_CFLAGS = $(CFLAGS) -I$(SRCDIR) $(INCLUDES) -I$(TSTDIR)/libtap
+TEST_LDFLAGS = $(LDFLAGS) -L$(BINDIR) -l$(LIBNAME)
+
+EXAMPLE_SOURCES = $(shell find $(EXADIR) -type f -name *.c)
+EXAMPLES = $(patsubst $(EXADIR)/%,$(BINDIR)/%,$(EXAMPLE_SOURCES:.c=))
+
+EXAMPLE_CFLAGS = $(CFLAGS) $(INCLUDES)
+EXAMPLE_LDFLAGS = $(LDFLAGS) -L$(BINDIR) -l$(LIBNAME) -lcurl
+
+SYMBOLS = $(addsuffix .dSYM,$(TESTS) $(EXAMPLES))
 
 
 default: lib
@@ -38,22 +48,26 @@ all: lib test examples
 
 lib: $(LIBTARGET)
 
-$(LIBTARGET): $(OBJS)
+$(LIBTARGET): $(OBJECTS)
 	$(AR) $@ $^
 
-$(BINDIR)/%.o: $(SRCDIR)/%.c $(HDRS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $<
+$(BINDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
+	$(CC) $(LIB_CFLAGS) $(LIB_LDFLAGS) -c -o $@ $<
 
-test: lib $(TSTBINS)
-	prove -e '' -v $(TSTBINS)
+test: lib $(TESTS)
+	$(PROVE) $(TESTS)
 
-$(BINDIR)/%: $(TSTDIR)/%.c $(TSTDEPS)
-	$(CC) $(INCLUDES) -I$(TSTDIR)/libtap -L$(BINDIR) -l$(LIBNAME) -o $@ $^
+$(BINDIR)/%: $(TSTDIR)/%.c $(TEST_DEPS)
+	$(CC) $(TEST_CFLAGS) $(TEST_LDFLAGS) -o $@ $^
 
-examples: lib $(EXABINS)
+examples: lib $(EXAMPLES)
 
 $(BINDIR)/%: $(EXADIR)/%.c
-	$(CC) $(INCLUDES) $(EXADEPS) -L$(BINDIR) -l$(LIBNAME) -o $@ $^
+	$(CC) $(EXAMPLE_CFLAGS) $(EXAMPLE_LDFLAGS) -o $@ $^
 
 clean:
-	$(RM) $(OBJS) $(LIBTARGET) $(TSTBINS) $(EXABINS)
+	$(RM) -r $(SYMBOLS)
+	$(RM) $(LIBTARGET)
+	$(RM) $(OBJECTS)
+	$(RM) $(TESTS)
+	$(RM) $(EXAMPLES)
