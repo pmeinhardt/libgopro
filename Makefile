@@ -31,7 +31,7 @@ TEST_DEPS = $(TSTDIR)/libtap/tap.c
 TESTS = $(patsubst $(TSTDIR)/%,$(BINDIR)/%,$(TEST_SOURCES:.c=))
 
 TEST_CFLAGS = $(CFLAGS) -I$(SRCDIR) $(INCLUDES) -I$(TSTDIR)/libtap
-TEST_LDFLAGS = $(LDFLAGS) -L$(BINDIR) -l$(LIBNAME)
+TEST_LDFLAGS = $(LDFLAGS) -L$(BINDIR) -l$(LIBNAME) -lcurl
 
 EXAMPLE_SOURCES = $(shell find $(EXADIR) -type f -name *.c)
 EXAMPLES = $(patsubst $(EXADIR)/%,$(BINDIR)/%,$(EXAMPLE_SOURCES:.c=))

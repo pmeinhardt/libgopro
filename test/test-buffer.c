@@ -1,6 +1,5 @@
 #include "test-helper.h"
 
-#include "common.h"
 #include "buffer.h"
 
 static vbuffer *buf;
@@ -43,8 +42,8 @@ int main() {
   backup = buf->data;
   vbuffer_resize(buf, 4);
 
-  ok(buf->capacity == 4, "set buffer capacity on resize (shrink)");
-  ok(buf->length == 4, "set buffer length on resize (shrink)");
+  ok(buf->capacity == 4, "update buffer capacity on resize (shrink)");
+  ok(buf->length == 4, "update buffer length on resize (shrink)");
   ok(memcmp(buf->data, data, 4) == 0, "keep data on resize (shrink)");
   ok(buf->data != backup, "re-allocate memory pool on resize (shrink)");
 
