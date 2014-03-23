@@ -19,9 +19,13 @@ int main() {
 
   ok(buf != NULL);
 
+  // create
+
   ok(buf->capacity == 8, "create buffer with given capacity");
   ok(buf->length == 0, "create buffer with length 0");
   ok(buf->data != NULL, "create buffer with memory pool");
+
+  // append
 
   void *backup = buf->data;
   void *data = (void *)"abcdef";
@@ -33,6 +37,8 @@ int main() {
   mem_is(buf->data, data, 6, "append data correctly (fits)");
   ok(buf->data == backup, "don't re-allocate memory pool on append (fits)");
 
+  // append (grow pool)
+
   vbuffer_append(buf, data, 6);
 
   ok(buf->capacity == 12, "update buffer capacity on append (grow)");
@@ -40,6 +46,8 @@ int main() {
   mem_is(buf->data, data, 6, "copy previous data on append (grow)");
   mem_is((char *)buf->data + 6, data, 6, "append new data correctly (grow)");
   ok(buf->data != backup, "re-allocate memory pool on append (grow)");
+
+  // resize
 
   backup = buf->data;
   vbuffer_resize(buf, 4);
