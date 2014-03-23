@@ -6,4 +6,6 @@
 
 #include "tap.h"
 
+#define mem_is(a, b, len, ...) ok(memcmp(a, b, len) == 0, __VA_ARGS__)
+
 #endif

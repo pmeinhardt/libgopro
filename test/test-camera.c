@@ -1,11 +1,10 @@
 #include "test-helper.h"
 
 #include "buffer.h"
-#include "client.h"
 
 #include "gopro/camera.h"
 #include "gopro/defaults.h"
-#include "gopro/errors.h"
+#include "gopro/status.h"
 
 static char *ipaddr = "127.0.0.1";
 static char *passwd = "passwd";
@@ -21,12 +20,15 @@ void cleanup() {
 }
 
 int main() {
-  plan(4);
+  plan(6);
 
   setup();
 
-  ok(strcmp(cam->ipaddr, "127.0.0.1") == 0, "create camera with ip address");
-  ok(strcmp(cam->password, "passwd") == 0, "create camera with password");
+  ok(cam != NULL);
+
+  is(cam->ipaddr, "127.0.0.1", "create camera with ip address");
+  is(cam->password, "passwd", "create camera with password");
+  ok(cam->client != NULL, "create camera with client");
 
   ok(cam->ipaddr != ipaddr, "create camera copies ip address");
   ok(cam->password != passwd, "create camera copies password");
