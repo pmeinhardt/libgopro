@@ -153,10 +153,16 @@ int gopro_camera_get_status(gopro_camera *cam, gopro_status *status) {
   char *url = gopro_camera_build_url(cam, "se");
   int err = gopro_client_get(client, url, buffer, callback);
 
-  if (err != 0) return err;
-  if (buffer->length < 31) return GOPRO_ERROR;
+  if (err != 0) {
+    gopro_camera_free_url(url);
+    vbuffer_free(buffer);
+    return GOPRO_ERROR;
+  }
+
+  assert(buffer->length >= 31);
 
   gopro_status_parse(status, buffer->data);
+
   gopro_camera_free_url(url);
   vbuffer_free(buffer);
 
