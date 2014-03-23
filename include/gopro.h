@@ -3,7 +3,7 @@
 
 #include "gopro/camera.h"
 #include "gopro/defaults.h"
-#include "gopro/errors.h"
+#include "gopro/status.h"
 #include "gopro/version.h"
 
 #endif

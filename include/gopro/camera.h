@@ -2,9 +2,9 @@
 #define INCLUDE_GOPRO_CAMERA_H
 
 typedef struct gopro_camera {
-  void *client;
   char *ipaddr;
   char *password;
+  void *client;
 } gopro_camera;
 
 typedef struct gopro_status {

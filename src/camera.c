@@ -6,7 +6,7 @@
 
 #include "gopro/camera.h"
 #include "gopro/defaults.h"
-#include "gopro/errors.h"
+#include "gopro/status.h"
 
 gopro_camera *gopro_camera_create(char *ipaddr, char *password) {
   gopro_camera *cam = (gopro_camera *)malloc(sizeof(gopro_camera));

@@ -3,7 +3,7 @@
 
 #include "client.h"
 
-#include "gopro/errors.h"
+#include "gopro/status.h"
 
 gopro_client *gopro_client_create() {
   gopro_client *client = (gopro_client *)malloc(sizeof(gopro_client));
